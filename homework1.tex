@@ -1,0 +1,74 @@
+\documentclass[a4paper, 12pt, titlepage]{article}
+\input{config}
+
+\title{HOMEWORK 1}
+\author{Arthur Augusto Vieira Pinho Gimenez (579859)\\
+        Caio Felipe dos Santos Oliveira  (516882) \\
+        Roberto Walace Santos da Silva (581562)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Questão 1}
+
+A primeira questão solicita que uma amostra de 300 observações do conjunto de dados em anexo, armazenado em formato .csv, seja carregada pelo R e armazenada no objeto \texttt{data\_group}. No entanto, é notável que o arquivo \textit{HW1\_bike\_sharing} apresenta 731 observações, portanto precisamos extrair apenas 300 do total, seguindo o critério requisitado pela questão.
+
+Considere $M$ como o maior número de matrícula entre os integrantes do grupo, ou seja, $M=max \, \{579859, 516882, 581562\}=581562$. Defina $r$ como a posição inicial das 300 observações, cuja fórmula é:
+\begin{gather*}
+    r= 1 +(M \bmod 100) \\
+    \intertext{Substituindo o valor de $M$ na fórmula acima,} 
+    r= 1 +(581562 \bmod 100) \\
+    r= 63
+\end{gather*}
+Defina $f$ como a posição final dos dados extraídos, segue, por aritmética simples:
+\begin{gather*}
+    300= f-63 +1\\
+    f=362
+\end{gather*}
+
+Com base nessas duas posições, é possível determinar a data da primeira e última observação no arquivo .csv, conforme solicitado na questão.
+
+% Primeira tabela
+\begin{table}[h!]
+    \centering
+    \caption{Linhas da posição 63 e 362}
+    \label{tab:mascara_1u}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+        &instant &dteday &season &weathersit &temp &casual &registered \\ \hline
+        63 &63 &2011-03-04 &1 &2 &10.7 &214 &1730 \\ \hline
+        362 &362 &2011-12-28 &1 &1 &12.3 &255 &2047
+    \end{tabular}
+\end{table}
+
+Portanto, ao analisar as linhas acima, é conclusivo que as datas referentes à observação 63 e à 362 são respectivamente \textit{2011-03-04} e \textit{2011-12-28}. 
+\newpage
+\subsection{Implementação em R}
+
+\begin{rcode}[caption={Extração de amostra},breaklines=true, breakatwhitespace=true]
+    # Instala e carrega o pacote para leitura de arquivos .csv
+    install.packages("readr") 
+    library(readr) 
+    
+    # Registra os nomes das colunas
+    nomes_colunas <- c("","instant","dteday","season",
+                        "weathersit","temp","casual","registered")
+    
+    # Extrai a amostra de 300 observações
+    data_group <- read_csv("HW1_bike_sharing.csv", skip = 62, n_max = 300)
+    colnames(data_group) <- nomes_colunas
+    \end{rcode}
+
+
+\section{Questão 2}
+
+\section{Questão 3}
+
+\section{Questão 4}
+
+
+
+\end{document}

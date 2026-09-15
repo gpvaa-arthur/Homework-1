@@ -1,0 +1,89 @@
+% ==========================================
+% 1. Pacotes básicos
+% ==========================================
+% Margens ABNT: Superior 3cm, Esquerda 3cm, Inferior 2cm, Direita 2cm
+\usepackage[top=3cm, left=3cm, bottom=2cm, right=2cm]{geometry}
+
+% Espaçamento entre linhas de 1,5
+\usepackage{setspace}
+\onehalfspacing
+
+% Recuo do primeiro parágrafo (1,25 cm) e controle de espaçamento entre parágrafos
+\usepackage{indentfirst}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+
+% Idioma e fontes
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+
+%  Matemática
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+% Imagens
+\usepackage{graphicx}
+
+% Sumário
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=black,
+    filecolor=black,
+    bookmarksnumbered=true,
+    pdfstartview={FitH}
+}
+
+% ==========================================
+% 2. AMBIENTE PARA CÓDIGO R 
+% ==========================================
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Paleta de cores para realce de sintaxe do R
+\definecolor{r_bg}{rgb}{0.97, 0.97, 0.98}        % Fundo suave
+\definecolor{r_comment}{rgb}{0.40, 0.45, 0.55}   % Comentários
+\definecolor{r_keyword}{rgb}{0.10, 0.30, 0.70}   % Palavras-chave
+\definecolor{r_string}{rgb}{0.15, 0.55, 0.15}    % Strings
+\definecolor{r_numbers}{rgb}{0.5, 0.5, 0.5}      % Numeração de linhas
+\definecolor{r_rule}{rgb}{0.85, 0.85, 0.88}      % Borda do quadro
+
+% Definição do ambiente \begin{rcode} ... \end{rcode}
+\lstnewenvironment{rcode}[1][]{%
+  \lstset{
+    language=R,
+    backgroundcolor=\color{r_bg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{r_keyword}\bfseries,
+    commentstyle=\color{r_comment}\itshape,
+    stringstyle=\color{r_string},
+    numberstyle=\tiny\color{r_numbers},
+    numbers=left,
+    numbersep=10pt,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=2,
+    breaklines=true,
+    breakatwhitespace=true,
+    frame=single,
+    rulecolor=\color{r_rule},
+    frameround=tttt,
+    captionpos=b,
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+    extendedchars=true,
+    literate=
+      {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+      {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {à}{{\`a}}1 {à}{{\`A}}1
+      {ã}{{\~a}}1 {õ}{{\~o}}1 {Ã}{{\~A}}1 {Õ}{{\~O}}1
+      {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1 {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1
+      {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1,
+    #1
+  }
+}{}
