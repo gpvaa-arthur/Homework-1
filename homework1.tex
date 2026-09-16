@@ -62,13 +62,29 @@ Portanto, ao analisar as linhas acima, é conclusivo que as datas referentes à 
     colnames(data_group) <- nomes_colunas
     \end{rcode}
 
+O código acima é responsável por extrair as 300 observações da fonte de dados. As funções \textit{install.packages()} e \textit{library()} presentes nas linhas 2-3 são respectivamente responsáveis por instalar uma biblioteca e carregá-la no interpretador do R.
 
+\begin{itemize}
+    \item \textbf{readr}: É uma biblioteca que fornece funções rápidas para ler dados retangulares, como CSV ou TSV.
+\end{itemize}
+
+Para extrair a parcela dos dados é preciso pular a linha referente aos nomes das colunas, portanto, nas linhas 6-7 esses nomes são gravados antecipadamente em formato de vetor no objeto \textit{nomes\_colunas}.
+
+\begin{itemize}
+    \item \textbf{c($p_1, p_2, \cdots , p_{n}$)}: É uma função que retorna um vetor ou uma lista a partir dos parâmetros passados.
+\end{itemize}
+
+Na linha 10, a função \texttt{read\_csv(file, skip, n\_max)} é responsável pela leitura do arquivo HW1\_bike\_sharing.csv e extração dos dados, armazenando-os no objeto \textit{data\_group}. Na linha seguinte, a função \texttt{colnames()} recebe \textit{data\_group} como parâmetro e armazena os nomes das colunas. Segue definição dos argumentos de \textit{read\_csv}:
+
+\begin{itemize}
+    \item \textbf{file}: O nome do arquivo.
+    \item \textbf{skip}: Número de linhas puladas antes da leitura dos dados.
+    \item \textbf{n\_max}: Número máximo de linhas a serem lidas.
+\end{itemize}
 \section{Questão 2}
 
 \section{Questão 3}
 
 \section{Questão 4}
-
-
 
 \end{document}
