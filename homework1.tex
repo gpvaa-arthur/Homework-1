@@ -13,7 +13,11 @@
 \tableofcontents
 \newpage
 
-\section{Questão 1}
+% ==========================================
+% 1. Questão 1
+% ==========================================
+\section*{Questão 1}
+\addcontentsline{toc}{section}{Questão 1}
 
 A primeira questão solicita que uma amostra de 300 observações do conjunto de dados em anexo, armazenado em formato .csv, seja carregada pelo R e armazenada no objeto \texttt{data\_group}. No entanto, é notável que o arquivo \textit{HW1\_bike\_sharing} apresenta 731 observações, portanto precisamos extrair apenas 300 do total, seguindo o critério requisitado pela questão.
 
@@ -32,7 +36,7 @@ Defina $f$ como a posição final dos dados extraídos, segue, por aritmética s
 
 Com base nessas duas posições, é possível determinar a data da primeira e última observação no arquivo .csv, conforme solicitado na questão.
 
-% Primeira tabela
+% ----------- Tabela 1 -------------
 \begin{table}[h!]
     \centering
     \caption{Linhas da posição 63 e 362}
@@ -46,8 +50,15 @@ Com base nessas duas posições, é possível determinar a data da primeira e ú
 
 Portanto, ao analisar as linhas acima, é conclusivo que as datas referentes à observação 63 e à 362 são respectivamente \textit{2011-03-04} e \textit{2011-12-28}. 
 \newpage
-\subsection{Implementação em R}
 
+% ==========================================
+% 1.1 Implementação em R
+% ==========================================
+
+\subsection*{Implementação em R}
+\addcontentsline{toc}{subsection}{Implementação em R}
+
+% ----------- Código 1 -------------
 \begin{rcode}[caption={Extração de amostra},breaklines=true, breakatwhitespace=true]
     # Instala e carrega o pacote para leitura de arquivos .csv
     install.packages("readr") 
@@ -60,7 +71,7 @@ Portanto, ao analisar as linhas acima, é conclusivo que as datas referentes à 
     # Extrai a amostra de 300 observações
     data_group <- read_csv("HW1_bike_sharing.csv", skip = 62, n_max = 300)
     colnames(data_group) <- nomes_colunas
-    \end{rcode}
+\end{rcode}
 
 O código acima é responsável por extrair as 300 observações da fonte de dados. As funções \textit{install.packages()} e \textit{library()} presentes nas linhas 2-3 são respectivamente responsáveis por instalar uma biblioteca e carregá-la no interpretador do R.
 
@@ -81,10 +92,508 @@ Na linha 10, a função \texttt{read\_csv(file, skip, n\_max)} é responsável p
     \item \textbf{skip}: Número de linhas puladas antes da leitura dos dados.
     \item \textbf{n\_max}: Número máximo de linhas a serem lidas.
 \end{itemize}
-\section{Questão 2}
 
-\section{Questão 3}
+% ==========================================
+% 2.0 Questão 2
+% ==========================================
+\newpage
+\section*{Questão 2}
+\addcontentsline{toc}{section}{Questão 2}
+A segunda questão requisita o tratamento inicial dos dados, como identificação dos tipos, cálculo das medidas de tendência central e a criação de histograma e box-plot. Antes disso, no entanto, solicitou a definição de uma variável \texttt{total\_user} formada pela soma dos usuários casuais e registrados. Para isso, somamos os dois vetores que armazenam cada variável, como demonstrado no código a seguir.
 
-\section{Questão 4}
+% ----------- Código 2 -------------
+\begin{rcode}[firstnumber=13, caption={Definição de total\_user},breaklines=true, breakatwhitespace=true]
+    # Questão 2
+    total_user = data_group[, "casual", drop = TRUE] + data_group[, "registered", drop = TRUE]
+\end{rcode}
+
+Nós acessamos toda a coluna do data\_group por [,nome], enquanto o parâmetro \texttt{drop = "TRUE"} força a conversão de coluna de data.frame para vetor.
+
+% ==========================================
+% 2.1 Item 1
+% ==========================================
+\subsection*{Item 1}
+\addcontentsline{toc}{subsection}{Item 1}
+Inicialmente, o item pede a classificação das variáveis quanto a serem numéricas ou categóricas, informando a unidade de medida caso numérica e as categorias caso categóricas.
+
+\begin{itemize}
+    \item \textbf{instant} (numérica): Quantifica a posição da observação na lista, portanto é uma variável numérica.
+    \item \textbf{dteday} (numérica): A data, como representada na tabela, indica um número que quantifica um instante do tempo, logo é uma variável numérica.
+        \begin{itemize}
+            \item A data (YYYY-MM-DD) é composta por três unidades de medida: Ano, mês e dia.
+        \end{itemize}
+    \item \textbf{season} (categórica): Associa a cada número (1-4) uma classe de \textit{"estação do ano"}, portanto é categórica.
+        \begin{itemize}
+            \item As categorias são: "Primavera", "verão", "outono" e "inverno".
+        \end{itemize}
+    \item \textbf{weathersit} (categórica): As condições meteorológicas também são associadas a números, mas cada um representa uma classe, portanto é uma variável categórica.
+        \begin{itemize}
+            \item As categorias são: “Céu limpo”, “Nublado”, “Chuva fraca” e “Chuva forte”
+        \end{itemize}
+    \item \textbf{temp} (numérica): A temperatura é uma variável que quantifica diretamente a quantidade de energia térmica associada a algo, portanto é uma variável numérica.
+        \begin{itemize}
+            \item A unidade de medida é em graus Celsius normalizada por 41, conforme descrito na questão.
+        \end{itemize}
+    \item \textbf{casual} (numérica): Quantifica o número de usuários casuais, portanto é uma variável numérica.
+    \item \textbf{registered} (numérica): Quantifica o número de usuários registrados, portanto é uma variável numérica.
+\end{itemize}
+
+O item também solicita a verificação da existência de valores ausentes e sua quantificação, caso necessário. Para isso, foi criado o seguinte trecho de código em R:
+
+% ----------- Código 3 -------------
+\begin{rcode}[firstnumber=16, caption={Verificação de valores ausentes},breaklines=true, breakatwhitespace=true]
+    # Item 1.
+    anyNA((data_group)) # Retorno no terminal (FALSE) 
+\end{rcode}
+
+A linha 15 do código apresenta a função \texttt{anyNA()}, que verifica se há pelo menos um valor ausente presente no argumento passado (vetor, list, data.frame...). O retorno no terminal foi \textit{FALSE}, logo não há valores ausentes.
+
+% ==========================================
+% 2.2 Item 2
+% ==========================================
+
+\subsection*{Item 2}
+\addcontentsline{toc}{subsection}{Item 2}
+O item solicita o cálculo das medidas de tendência central (média, mediana e moda) para as variáveis numéricas relevantes, que são temp, casual e registered.
+
+% ==========================================
+% 2.2.1 Definições
+% ==========================================
+
+\subsubsection*{Definições}
+\addcontentsline{toc}{subsubsection}{Definições}
+\noindent \textit{def} - Média: Um valor numérico que quando multiplicado pela quantidade de dados resulta na soma dos valores do conjunto.
+
+\begin{equation}
+    \overline{x}=\frac{1}{N}\sum_{i=1}^{N}x_i
+\end{equation}
+
+\noindent \textit{def} - Mediana: O valor central de um conjunto qualquer de dados \textbf{ordenados}. 
+
+\begin{gather*}
+      Med = X_{(N+1)/2}   \tag 2    \label{eq:mediana} \\ 
+    \intertext{Caso existam dois valores centrais, isto é, o resultado foi um número decimal, a mediana é dada por} 
+     Med = \frac{X_{\lfloor (N+1)/2 \rfloor}+X_{\lceil(N+1)/2 \rceil}}{2} \tag 3 
+\end{gather*}
+
+\noindent \textit{def} - Moda: O valor que mais se repete em um conjunto de dados qualquer.\footnote[1]{Caso não se repita valores, a distribuição é amodal. Duas modas é bimodal, enquanto três ou mais é multimodal.}
+
+% ==========================================
+% 2.2.2 Cálculo de 10 observações
+% ==========================================
+
+\subsubsection*{Cálculo de 10 observações}
+\addcontentsline{toc}{subsubsection}{Cálculo de 10 observações}
+Conforme requisitado na tarefa, segue o cálculo manual das 10 primeiras observações do conjunto de dados e os resultados do código em R.
+
+% ----------- Tabela 2  -------------
+    \begin{table}[h!]
+        \centering
+        \caption{10 primeiras observações}
+        \label{tab:mascara_2u}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+            temp &10.7 &15.8 &15.4 &10.7 &12.0 &12.1& 16.0&13.0 &13.5 &15.8 \\ \hline
+            casual &214 &640 &114 &244 &316 &191 &46 &247 &724 &982 \\ \hline
+            registered &1730 &1437 &491 &1628 &1817 &1700 &577 &1730 &1408 &1435 \\
+            \hline
+        \end{tabular}
+    \end{table}
+
+\begin{itemize}
+    \item Médias: 
+    \begin{gather*}
+        \overline{x}_{\text{temp}}=\frac{1}{10}\cdot(10.7+15.8+15.4+10.7+12.0+12.1+16.0+13.0+13.5+15.8)       \\ 
+        \overline{x}_{\text{temp}}=13.5  
+    \end{gather*}
+    \begin{gather*}
+        \overline{x}_{\text{casual}}=\frac{1}{10}\cdot(214+640+114+244+316+191+46+247+724+982)       \\ 
+        \overline{x}_{\text{casual}}=371.8  
+    \end{gather*}
+    \begin{gather*}
+        \overline{x}_{\text{registered}}=\frac{1}{10}\cdot(1730+1437+491+1628+1817+1700+577+1730+1408+1435)       \\ 
+        \overline{x}_{\text{registered}}=1395.3
+    \end{gather*}
+    \item Medianas: 
+    
+    Para calcular as medianas é necessário ordenar os dados da segunda tabela, ao se ordenar, é obtido:
+\end{itemize}
+\vspace*{-6mm}
+% ----------- Tabela 3  -------------
+    \begin{table}[h!]
+        \centering
+        \caption{Dados ordenados}
+        \label{tab:mascara_3u}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+            temp &10.7 &10.7 &12.0 &12.1 &\color{red} 13.0 &\color{red}13.5 &15.4 &15.8 &15.8 &16.0 \\ \hline
+            casual &46 &114 &191 &214 &\color{red} 244 &\color{red} 247 &316 &640 &724 &982 \\ \hline 
+            registered &491 &577 &1408 &1435 &\color{red}1437 &\color{red}1628 &1700 &1730 &1730 &1817 \\
+            \hline
+        \end{tabular}
+    \end{table}
+
+\vspace*{-14mm}
+    \begin{gather*}
+        \intertext{Pela equação (3) e dados da tabela acima, } 
+        Med_{temp}=\frac{13.0+13.5}{2}=13.25 \\
+        Med_{casual}= \frac{244+247}{2}=245.5 \\
+        Med_{registered}= \frac{1437+1628}{2}=1532.5
+    \end{gather*}
+\begin{itemize}
+    \item Modas:
+    \begin{gather*}
+        Moda_{temp}= \text{Bimodal} \\
+        Moda_{casual}= \text{Amodal}\\
+        Moda_{registered}= 1730
+    \end{gather*}
+\end{itemize}
+
+\noindent Para verificar o resultado no R, o seguinte trecho de código foi escrito:
+
+% ----------- Código 4 -------------
+\begin{rcode}[firstnumber=19, caption={Cálculo das 10 observações (1)},breaklines=true, breakatwhitespace=true]
+    # Item 2.
+    mean(data_group[1:10, "temp", drop = TRUE])
+    mean(data_group[1:10, "casual", drop = TRUE])
+    mean(data_group[1:10, "registered", drop = TRUE])
+    
+    median(data_group[1:10, "temp", drop = TRUE])
+    median(data_group[1:10, "casual", drop = TRUE])
+    median(data_group[1:10, "registered", drop = TRUE])
+    
+    install.packages("DescTools") # Possui uma função para a moda
+    library(DescTools)
+    
+    Mode(data_group[1:10, "temp", drop = TRUE])
+    Mode(data_group[1:10, "casual", drop = TRUE])
+    Mode(data_group[1:10, "registered", drop = TRUE])
+\end{rcode}
+
+Foram utilizadas três funções para calcular cada tipo de medida de tendência central para cada variável. Nas linhas 26-27 é instalado e carregado o pacote \texttt{DescTools}, que possui funções relacionadas à estatística descritiva, como para o cálculo da moda.
+
+\begin{itemize}
+    \item \textbf{mean}: Calcula a média aritmética de um conjunto de dados (linhas 18-20).
+    \item \textbf{median}: Calcula a mediana de um conjunto de dados (linhas 22-24).
+    \item \textbf{Mode}: Calcula a moda de um conjunto de dados, retornando \texttt{NA} caso a distribuição seja amodal, o valor atômico caso haja uma única moda e um vetor de modas para 2 ou mais (linhas 29-31).
+\end{itemize}
+
+Os resultados exibidos no console foram iguais aos obtidos calculando manualmente, portanto as definições matemáticas utilizadas pelo R são a mesma.
+
+% ==========================================
+% 2.2.3 Cálculo de 300 observações
+% ==========================================
+
+\subsubsection*{Cálculo de 300 observações}
+\addcontentsline{toc}{subsubsection}{Cálculo de 300 observações}
+
+% ----------- Código 5 -------------
+\begin{rcode}[firstnumber=35, caption={Cálculo das 300 observações (1)},breaklines=true, breakatwhitespace=true]
+    # 300 observações
+    apply(data_group["temp"], 2, mean)
+    apply(data_group["casual"], 2, mean)
+    apply(data_group["registered"], 2, mean)
+    
+    apply(data_group["temp"], 2, median)
+    apply(data_group["casual"], 2, median)
+    apply(data_group["registered"], 2, median)
+    
+    apply(data_group["temp"], 2, Mode)
+    apply(data_group["casual"], 2, Mode)
+    apply(data_group["registered"], 2, Mode)
+\end{rcode}
+
+\noindent Os 9 resultados obtidos no console podem ser visualizados na tabela a seguir:
+% ----------- Tabela 4  -------------
+    \begin{table}[h!]
+        \centering
+        \caption{Medidas de tendência central - 300 observações}
+        \label{tab:mascara_4u}
+        \begin{tabular}{c|c|c|c}
+            & temp & casual & registered \\\hline
+            Média &22.116 &786.7867 &3023.62  \\ \hline
+            Mediana &22.2 &691.5 &3238.5 \\ \hline 
+            Moda &26.0 &Polimodal &Polimodal \\
+        \end{tabular}
+    \end{table}
+
+Ao interpretar os dados da tabela para a temperatura, como a média e mediana estão próximas, certamente há uma maior frequência de temperaturas próxima a 22°C. Para os usuários casuais e registrados, é incerto dizer se a média ou mediana é mais adequada para interpretação do valor central sem o conhecimento de outliers, medidas de dispersão ou formato da distribuição.
+
+% ==========================================
+% 2.3 Item 3
+% ==========================================
+
+\subsection*{Item 3}
+\addcontentsline{toc}{subsection}{Item 3}
+O item solicita o cálculo dos quartis e do intervalo interquartil para uma das variáveis relevantes. Além disso, pede para determinar o limite inferior e superior, quantificar os outliers e identificar suas respectivas datas.
+
+% ==========================================
+% 2.3.1 Definições
+% ==========================================
+
+\subsubsection*{Definições}
+\addcontentsline{toc}{subsubsection}{Definições}
+\noindent \textit{def} - Primeiro quartil (Q1): É definido como o número na posição equivalente à 25\%.
+\begin{equation*}
+    Q1 = X_{(N+1)/4} 
+\end{equation*}
+
+\noindent \textit{def} - Segundo quartil (Q2): Tem a definição equivalente à da mediana \eqref{eq:mediana}. 
+
+\noindent \textit{def} - Terceiro quartil (Q3): É definido como o número na posição equivalente à 75\%.    
+\begin{equation*}
+    Q1 = X_{3(N+1)/4} 
+\end{equation*}
+
+\noindent Em caso do cálculo dos quartis resultar em número racional, o quartil será dado pela média aritmética dos elementos na posição piso e teto, análogo ao especificado na equação \eqref{eq:mediana}.
+
+\noindent \textit{def} - Intervalo interquartil ($IQR$): Intervalo de dados que estão limitados pelos quartis.
+
+\begin{equation*}
+    IQR = Q3-Q1 
+\end{equation*}
+
+\noindent \textit{def} - Limite superior ($L_s$): Limite superior para dados típicos.
+
+\begin{equation*}
+    L_s = Q3+1.5 \cdot IQR
+\end{equation*}
+
+\noindent \textit{def} - Limite inferior ($L_i$): Limite inferior para dados típicos.
+
+\begin{equation*}
+    L_i = Q1-1.5 \cdot IQR
+\end{equation*}
+
+% ==========================================
+% 2.3.2 Cálculo de 10 observações
+% ==========================================
+
+\subsubsection*{Cálculo de 10 observações}
+\addcontentsline{toc}{subsubsection}{Cálculo de 10 observações}
+
+A variável escolhida para o cálculo foi \texttt{temp}, analisando os valores da tabela (\ref{tab:mascara_3u}), decorre:
+\vspace*{-5mm}
+\begin{gather*}
+    Q1 = \frac{10.7+12.0}{2}= 11.35\\
+    Q2 = \frac{13.0+13.5}{2}= 13.25 \\
+    Q3 = \frac{15.8+15.8}{2}= 15.8 \\
+    \intertext{Calculando o intervalo interquartil e os limites}
+    IQR = 15.8 - 11.35= 4.45 \\
+    L_s= 15.8 + 1.5 \cdot 4.45 = 22.475 \\
+    L_i= 11.35-1.5 \cdot 4.45 = 4.675
+\end{gather*}
+\noindent Segue código para verificação dos valores no R:
+
+% ----------- Código 6 -------------
+\begin{rcode}[firstnumber=48, caption={Cálculo das 10 observações (2)},breaklines=true, breakatwhitespace=true]
+    #Item 3.
+    quartis10 <- quantile(data_group[1:10, "temp", drop = TRUE], probs=c(0.25,0.50,0.75), type = 6)
+    IQR10 <- unname(quartis10[3]-quartis10[1])  
+    Ls10 <- unname(quartis10[3]) +1.5*IQR10
+    Li10 <- unname(quartis10[1]) - 1.5*IQR10
+
+    quartis10; IQR10; Ls10; Li10 # Exibe os valores no console
+\end{rcode}
+
+O código acima calcula os quartis utilizando a função \texttt{quantile(x, probs, type...)}, retornando um vetor nomeado com os quartis em ordem. Os parâmetros principais são:
+\begin{itemize}
+    \item x: Um vetor que contém os dados para o cálculo dos quartis.
+    \item probs: Um vetor que contém as posições dos quartis, proporcionalmente de 0 a 1.
+    \item type: Indica o tipo de cálculo de quartis que será utilizado, o tipo 6 é o que mais se aproxima das definições dadas nessa seção 
+\end{itemize}
+
+Depois o intervalo interquartil e os limites foram calculados com a expressão respectiva em R (linhas 48-50), utilizando a função \texttt{unname()} para retornar um valor simples (sem nome).
+
+\noindent O resultado do console e comparação com o cálculo manual é exibido na tabela a seguir:
+
+% ----------- Tabela 5  -------------
+\begin{table}[h!]
+    \centering
+    \caption{Comparação dos resultados}
+    \label{tab:mascara_5u}
+    \begin{tabular}{c|c|c|c|c|c|c}
+        10 observações& $Q1$ & $Q2$ & $Q3$ & $IQR$ & $L_s$ & $L_i$ \\\hline
+        Cálculo manual &11.350 &13.250 &15.800 & 4.45 & 22.475 & 4.675\\ \hline
+        Código R &\color{red}11.675 &13.250 &15.800 &\color{red}4.125 &\color{red} 21.9875 &\color{red} 5.4875 \\ 
+    \end{tabular}
+\end{table}
+
+Ao analisar a tabela, é verificável que houve uma discrepância entre os valor do primeiro quartil, o que ocasionou discrepância nos valores que são dependentes. Isso ocorreu por que o R, quando calcula o quartil, ao invés de escolher o elemento do piso e do teto e calcular a média aritmética, ele faz uma interpolação linear com base no valor decimal de $p_1=(N+1)/4$ e $p_3=3(N+1)/4$. Defina $p$ como uma posição genérica do quartil e $d$ sua parte decimal, podemos calcular um quartil genérico como:
+\vspace*{-4mm}
+\begin{gather*}
+    Qn= x_{\lfloor p \rfloor}+d \cdot (x_{\lceil p \rceil}-x_{\lfloor p \rfloor}) \\
+    \intertext{Alternativamente, para dados positivos} 
+    Qn= x_{\lfloor p \rfloor}+(p-\lfloor p \rfloor) \cdot (x_{\lceil p \rceil}-x_{\lfloor p \rfloor}) 
+\end{gather*} 
+
+Podemos fazer o cálculo manual utilizando a equação acima para verificar se o resultado é o mesmo:
+\vspace*{-4mm}
+\begin{gather*}
+    Q1=10.7+(2.75-2)\cdot (12-10.7) \\
+    Q1= 11.675
+\end{gather*}
+        
+De fato, o resultado é igual ao do R, como exibido na tabela (\ref{tab:mascara_5u}). Além disso, ao se verificar manualmente, observa-se que não houve outliers. ambém cabe informar que variável \textit{temp} foi escolhida por que é uma variável física que geralmente recebe tratamento estatístico.
+\newpage
+% ==========================================
+% 2.3.3 Cálculo de 300 observações
+% ==========================================
+
+\subsubsection*{Cálculo de 300 observações}
+\addcontentsline{toc}{subsubsection}{Cálculo de 300 observações}
+
+Como o método utilizado para cálculo de quartis do R geralmente é considerado mais preciso estatisticamente, não há problema utilizá-lo para a amostra inteira. O código utilizado foi:
+
+% ----------- Código 7 -------------
+\begin{rcode}[firstnumber=56, caption={Cálculo das 300 observações (2)},breaklines=true, breakatwhitespace=true]
+    #Amostra inteira
+    quartis <- quantile(data_group[,"temp", drop = TRUE], probs=c(0.25,0.50,0.75), type = 6)
+    IQR <- unname(quartis[3]-quartis[1])  
+    Ls <- unname(quartis[3]) +1.5*IQR
+    Li <- unname(quartis[1]) - 1.5*IQR
+
+    quartis; IQR; Ls; Li # Exibe os valores no console
+\end{rcode}
+
+Os valores obtidos estão exibidos na tabela a seguir:
+\vspace*{-2mm}
+% ----------- Tabela 6  -------------
+\begin{table}[h!]
+    \centering
+    \caption{Comparação dos resultados}
+    \label{tab:mascara_6u}
+    \begin{tabular}{c|c|c|c|c|c|c}
+        300 observações& $Q1$ & $Q2$ & $Q3$ & $IQR$ & $L_s$ & $L_i$ \\\hline
+        Código R &16.425 &22.200 &27.900 &11.475 & 45.1125 &-0.7875 \\ 
+    \end{tabular}
+\end{table}
+
+A questão também solicitou a quantificação das observações atípicas e identificação de suas datas. Para isso, foi criada uma função personalizada em R chamada \texttt{encontrar\_outliers}:
+
+% ----------- Código 8 -------------
+\begin{rcode}[firstnumber=64, caption={Determinação de outliers},breaklines=true, breakatwhitespace=true]
+    encontrar_outliers <- function(data_group, ls, li){
+      datas <- data_group[, "dteday", drop = TRUE]
+      temperatura <- data_group[, "temp", drop = TRUE]
+    
+      data_temp <- data.frame(NA,NA)
+      k <- 1; i <- 1
+      while(i<length(temperatura)){
+        if(temperatura[i] > ls || temperatura[i] < li){
+          data_temp[k, "dteday"] <- datas[i]
+          data_temp[k, "temp"]   <- temperatura[i]
+          k <- k + 1
+        }
+      i <- i+1  
+      }
+      return(data_temp)
+    }
+    data_temp <- encontrar_outliers(data_group, Ls, Li)
+\end{rcode}
+
+A função é definida na linha 65, recebendo o data\_group, o limite superior e o limite inferior como parâmetros. Nas linhas 66-67 são extraídos os vetores de temperatura e as datas do data.frame. Depois é inicializado um data.frame data\_temp com valor em duas colunas de NA. O while, definido na linha 7, verifica para cada elemento se a temperatura é maior que o limite superior ou menor que o limite inferior, caso verdade, armazena a temperatura e a data no data\_temp. Por fim, a função retorna o data\_temp com as informações da data e temperatura (linha 76).
+
+Para determinar os outliers relativos ao data\_group, a função é chamada (linha 82), armazenando o valor no objeto data\_temp. Ao ver os valores armazenados no objetos, é verificável que apenas possuia NAs, ou seja, não há outliers.
+
+Quanto à relevância dos dados da tabela (\ref{tab:mascara_6u}), o intervalo interquartil, o limite superior e o limite inferior conferem uma análise mais resistente à valores discrepantes, evitando, por exemplo, resultados imprecisos obtidos apenas pela aquisição da média e desvio-padrão. Além disso, os quartis permitem determinar o formato da distribuição, se é simétrica ou assimétrica ou se há uma densidade maior em algum quartil.
+
+% ==========================================
+% 2.4 Item 4
+% ==========================================
+
+\subsection*{Item 4}
+\addcontentsline{toc}{subsection}{Item 4}
+Esse item solicita a construção de um boxplot e histograma e a análise deles quanto à forma, dispersão e outras características. Segue o código do boxplot em R e sua explicação.
+
+% ----------- Código 9 -------------
+\begin{rcode}[firstnumber=83, caption={Criação de boxplot},breaklines=true, breakatwhitespace=true]
+    # Box-Plot
+    boxplot(data_group[, "temp", drop = TRUE],
+        main = "Distribuição de Temperaturas", # Título
+        ylab = "Temperatura (C)", # Legenda no eixo y
+        col = "#81C784",           # Cor da caixa 
+        border = "#2E7D32",        # Cor da borda     
+        medcol = "#D32F2F",        # Cor da mediana    
+        medlwd = 3,                # Espessura da mediana         
+        boxwex = 0.35,             # Largura da caixa
+        frame.plot = FALSE,        # Remove a moldura externa
+        outline = TRUE)            # Desenha outliers (se houver)
+\end{rcode}
+
+O primeiro parâmetro que a função \texttt{boxplot()} recebe é o vetor com os dados (observações), que nesse caso são de temperatura. Os parâmetros seguintes estão descritos de forma concisa com um comentário ao lado do código. Ao se exportar, a seguinte imagem foi obtida.
+ \newpage
+% ------------ Imagem 1 -----------
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Boxplot.png}
+    \caption{}
+    \label{fig:boxplot}
+\end{figure}
+
+Ao analisar a figura (\ref{fig:boxplot}), é conclusivo que o boxplot é simétrico, pois apresenta mediana central e hastes com aproximadamente o mesmo tamanho. Quanto à forma, o box plot parece implicar uma distribuição próxima à normal. Quanto à dispersão, o gráfico aparentemente apresenta uma dispersão padrão, nem muito concentrado nem muito disperso em relação aos valores centrais. Por fim, como afirmado anteriormente, os dados não apresentam outliers.
+
+Segue o código do histograma em R.
+% ----------- Código 10 -------------
+\begin{rcode}[firstnumber=95, caption={Criação de histograma},breaklines=true, breakatwhitespace=true]
+    # Histograma 
+    hist(data_group[, "temp", drop = TRUE],
+     main = "Histograma de Distribuição de Temperaturas",
+     xlab = "Temperatura (C)", # Legenda no eixo x
+     ylab = "Frequência absoluta",
+     col = "#81C784",       
+     border = "#2E7D32") 
+\end{rcode}
+
+O histograma apresenta os mesmos parâmetros do boxplot. Ao se exportar, a seguinte imagem foi obtida.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Histograma.png}
+    \caption{}
+    \label{fig:histograma}
+\end{figure}
+
+O histograma apresenta uma concentração ligeiramente maior de frequências em temperaturas superiores, mas também identifica um pico de frequências em torno dos 13 graus, uma vantagem em relação ao box-plot, que não permite a identificação de distribuições com múltiplos picos. O boxplot apresentaria vantagem da demarcação de outliers se o conjunto de dados os apresentassem.
+
+Quanto as medidas estatísticas calculadas nos itens 2 e 3, é verificável que a mediana e os quartis correspondem aos valores representados no boxplot, enquanto a média é melhor verificável pelo histograma pela altura média das barras, que parecem indicar que o resultado de 22.116 graus é razoável. A moda de 26 graus também está próxima da região de maior pico do histograma, corroborando sua credibilidade.
+
+% ==========================================
+% 2.5 Item 5
+% ==========================================
+
+\subsection*{Item 5}
+\addcontentsline{toc}{subsection}{Item 5}
+Esse item solicita a criação de uma variável binária \texttt{low\_usage} para classificar cada dia como baixa utilização caso o \texttt{total\_user} respectivo seja menor que o primeiro quartil. Além disso, requisitou o valor de $Q1$, o número e a proporção de dias classificados como baixa utilização. A resolução está no código a seguir.
+
+% ----------- Código 11 -------------
+\begin{rcode}[firstnumber=103, caption={},breaklines=true, breakatwhitespace=true]
+    #Item 5.
+    Q1_total_user <- unname(quantile(total_user, probs=c(0.25,0.50,0.75), type = 6))[1]
+    low_usage <- as.integer(total_user < Q1_total_user)
+    quantidade <- as.numeric(sum(low_usage == 1))
+    proporcao <- quantidade/300
+\end{rcode}
+
+O primeiro quartil de \texttt{total\_user} é calculado na linha 104. Na linha seguinte, é feita a condicional de forma vetorizada retornando um vetor lógico com TRUE ou FALSE, a função \texttt{as.integer()} recebendo esse resultado converte para 1 e 0. Na linha 106 é calculada a quantidade usando a função \texttt{sum()} que soma 1 para cada vez que a condição for satisfeita. Por fim, na linha 107 é calculada a proporcão. Os resultados exibidos no console ao verificar os objetos foram:
+\begin{itemize}
+    \item \texttt{Q1\_total\_user} = 3115.5
+    \item \texttt{quantidade} = 75
+    \item \texttt{proporcao} = 0.25 (ou seja, 1 em 4 dias é de baixo uso)
+\end{itemize}
+
+Esse critério de baixo uso é útil para determinar por exemplo para determinar correlações com outras variáveis, se por exemplo, se uma alta temperatura seria mais comum em dias com baixo uso.
+
+% ==========================================
+% 3. Questão 3
+% ==========================================
+\section*{Questão 3}
+\addcontentsline{toc}{section}{Questão 3}
+
+% ==========================================
+% 3. Questão 4
+% ==========================================
+\section*{Questão 4}
+\addcontentsline{toc}{section}{Questão 4}
 
 \end{document}
