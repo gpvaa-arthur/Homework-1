@@ -105,3 +105,26 @@ Q1_total_user <- unname(quantile(total_user, probs=c(0.25,0.50,0.75), type = 6))
 low_usage <- as.integer(total_user < Q1_total_user)
 quantidade <- as.numeric(sum(low_usage == 1))
 proporcao <- quantidade/300
+
+# Questão 3
+# Item 1.
+# Convertendo season numérico para categórico
+data_group$season <- factor(data_group$season,
+                            levels = c(1, 2, 3, 4),
+                            labels = c("Inverno", "Primavera", "Verão", "Outono"))
+# 1. Média de usuários por estação
+tapply(total_user, data_group$season, mean)
+# 2. Mediana de usuários por estação
+tapply(total_user, data_group$season, median)
+# 3. Desvio padrão de usuários por estação
+tapply(total_user, data_group$season, sd)
+# 4. Proporção de dias classificados como low_usage por estação
+tapply(low_usage, data_group$season, mean)
+
+boxplot(total_user ~ data_group$season,
+        main = "Comparação do uso do sistema por Estação", #Titulo
+        xlab = "Estação do Ano", #legenda eixo x
+        ylab = "Total de Usuários", #legenda eixo y
+        medcol = "#D32F2F",        # Cor da mediana
+        col = c("#81C784", "#FFF176", "#FFB74D", "#64B5F6"), #cores das caixas
+        border = "#2E7D32") #cor da borda da caixa
