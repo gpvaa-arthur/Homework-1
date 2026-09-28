@@ -1,0 +1,96 @@
+% ==========================================
+% 3. Questão 3
+% (o título da seção e o \addcontentsline ficam no homework1.tex;
+%  este arquivo é incluído logo abaixo deles com \input{questao3})
+% ==========================================
+
+A questão 3 solicita o uso da variável \texttt{low\_usage} previamente definida na questão 2 para investigar as características associadas aos dias de menor uso do sistema.
+
+% ==========================================
+% 3.1 Item 1
+% ==========================================
+
+\subsection*{Item 1}
+\addcontentsline{toc}{subsection}{Item 1}
+Este item pede para calcular média, mediana e desvio padrão de \texttt{total\_user} para cada estação do ano e determinar a proporção de dias classificados como \texttt{low\_usage} e, além disso, construir um boxplot comparando cada estação.
+
+% ==========================================
+% 3.1.1 Definições
+% ==========================================
+
+\subsubsection*{Definições}
+\addcontentsline{toc}{subsubsection}{Definições}
+\noindent \textit{def} - Desvio padrão: indica o quão espalhados estão os valores de um conjunto de dados em relação à média, utilizado aqui como desvio padrão amostral, já que estamos analisando uma amostra de 300 valores de uma população total de 731. O desvio padrão amostral é o mesmo utilizado pela função \texttt{sd()} do R, dado pela fórmula:
+
+\begin{equation*}
+    s = \sqrt{\frac{1}{N-1}\sum_{i=1}^{N}\left(x_i-\overline{x}\right)^2}
+\end{equation*}
+
+\noindent Para a resolução do item 1, segue o código em R e a explicação de cada trecho:
+
+% ----------- Código (Questão 3, Item 1) -------------
+\begin{rcode}[firstnumber=109, caption={Análise da utilização do sistema em cada estação do ano},breaklines=true, breakatwhitespace=true]
+    # Questão 3
+    # Item 1.
+    # Convertendo season numérico para categórico
+    data_group$season <- factor(data_group$season,
+                                levels = c(1, 2, 3, 4),
+                                labels = c("Inverno", "Primavera", "Verão", "Outono"))
+    # 1. Média de usuários por estação
+    tapply(total_user, data_group$season, mean)
+    # 2. Mediana de usuários por estação
+    tapply(total_user, data_group$season, median)
+    # 3. Desvio padrão de usuários por estação
+    tapply(total_user, data_group$season, sd)
+    # 4. Proporção de dias classificados como low_usage por estação
+    tapply(low_usage, data_group$season, mean)
+
+    boxplot(total_user ~ data_group$season,
+            main = "Comparação do uso do sistema por Estação", #Titulo
+            xlab = "Estação do Ano", #legenda eixo x
+            ylab = "Total de Usuários", #legenda eixo y
+            medcol = "#D32F2F",        # Cor da mediana
+            col = c("#81C784", "#FFF176", "#FFB74D", "#64B5F6"), #cores das caixas
+            border = "#2E7D32") #cor da borda da caixa
+\end{rcode}
+
+Primeiro é feita a conversão da variável \texttt{season} de numérica para categórica usando \texttt{factor} para associar o nome de cada estação ao seu respectivo número (1, 2, 3, 4). A conversão não altera os valores calculados, apenas faz com que os grupos sejam identificados pelo nome da estação, tanto na saída da função \texttt{tapply} quanto no eixo do boxplot. Depois, é utilizada a função \texttt{tapply()} para dividir o vetor de \texttt{total\_user} em subgrupos, um para cada estação do ano, e aplicar uma função (no caso aqui, as funções de média, mediana e desvio padrão) a cada subgrupo deste vetor. O resultado obtido no R está na tabela a seguir:
+
+% ----------- Tabela 7  -------------
+\begin{table}[h!]
+    \centering
+    \caption{Resultados para cada estação}
+    \label{tab:mascara_7u}
+    \begin{tabular}{c|c|c|c|c}
+        Medição & Inverno & Primavera & Verão & Outono \\\hline
+        Média &2000.76 &3775.17 &4464.36 &3664.46 \\ \hline
+        Mediana &2077.00 &4085.50 &4615.50 &3717.00 \\ \hline
+        Desvio padrão &738.80 &1138.90 &798.35 &983.01 \\ \hline
+        Proporção (\texttt{low\_usage}) &0.92 &0.26 &0.04 &0.27
+    \end{tabular}
+\end{table}
+
+Como a variável \texttt{low\_usage} é 0 ou 1, fazer a média retorna exatamente a proporção, já que estamos somando os dias classificados como \texttt{low\_usage} e dividindo pela quantidade de dias.
+
+Para a construção do boxplot, foi feita a criação do gráfico fazendo:
+\begin{center}
+    \texttt{total\_user \textasciitilde{} data\_group\$season}
+\end{center}
+Ou seja, \texttt{total\_user} em função da variável \texttt{season}, gerando uma caixa para cada estação. O boxplot gerado está exibido a seguir:
+
+% ------------ Imagem 3 -----------
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Boxplot_estacoes.png}
+    \caption{Boxplot do total de usuários por estação}
+    \label{fig:boxplot_estacoes}
+\end{figure}
+
+Os resultados evidenciam uma clara associação entre as estações do ano e o uso do sistema, mostrando que o uso diminui consideravelmente no período de inverno e aumenta nas estações mais quentes. Além disso, a extração da proporção de dias classificados como \texttt{low\_usage} denota que a grande maioria dos dias de inverno é classificada como de baixa utilização do sistema, ademais, o uso do sistema no verão aumenta mais que o dobro do que no inverno, com o verão tendo uma média total de usuários do sistema de 4464.36 contra uma média de 2000.76 usuários no inverno. Outra informação relevante é que as estações de primavera e outono possuem média de usuários diária bem próxima, o que demonstra que o uso do sistema é bem equivalente entre essas duas estações, com uma ressalva de que a primavera tem alto desvio padrão comparado às outras estações, evidenciando uma notável disparidade entre dias de maior uso e de menor uso dentro da própria estação devido a fatores além da estação do ano.
+
+% ==========================================
+% 3.2 Item 2 (a preencher)
+% ==========================================
+
+% \subsection*{Item 2}
+% \addcontentsline{toc}{subsection}{Item 2}
