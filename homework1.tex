@@ -290,17 +290,17 @@ Os resultados exibidos no console foram iguais aos obtidos calculando manualment
 % ----------- Código 5 -------------
 \begin{rcode}[firstnumber=35, caption={Cálculo das 300 observações (1)},breaklines=true, breakatwhitespace=true]
     # 300 observações
-    apply(data_group["temp"], 2, mean)
-    apply(data_group["casual"], 2, mean)
-    apply(data_group["registered"], 2, mean)
-    
-    apply(data_group["temp"], 2, median)
-    apply(data_group["casual"], 2, median)
-    apply(data_group["registered"], 2, median)
-    
-    apply(data_group["temp"], 2, Mode)
-    apply(data_group["casual"], 2, Mode)
-    apply(data_group["registered"], 2, Mode)
+    mean(data_group[, "temp", drop = TRUE])
+    mean(data_group[,"casual", drop = TRUE])
+    mean(data_group[, "registered", drop = TRUE])
+
+    median(data_group[, "temp", drop = TRUE])
+    median(data_group[, "casual", drop = TRUE])
+    median(data_group[, "registered", drop = TRUE])
+
+    Mode(data_group[, "temp", drop = TRUE])
+    Mode(data_group[, "casual", drop = TRUE])
+    Mode(data_group[, "registered", drop = TRUE])
 \end{rcode}
 
 \noindent Os 9 resultados obtidos no console podem ser visualizados na tabela a seguir:
