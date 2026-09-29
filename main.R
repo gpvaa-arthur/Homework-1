@@ -33,17 +33,17 @@ Mode(data_group[1:10, "casual", drop = TRUE])
 Mode(data_group[1:10, "registered", drop = TRUE])
 
 # 300 observações
-apply(data_group["temp"], 2, mean)
-apply(data_group["casual"], 2, mean)
-apply(data_group["registered"], 2, mean)
+mean(data_group[, "temp", drop = TRUE])
+mean(data_group[,"casual", drop = TRUE])
+mean(data_group[, "registered", drop = TRUE])
 
-apply(data_group["temp"], 2, median)
-apply(data_group["casual"], 2, median)
-apply(data_group["registered"], 2, median)
+median(data_group[, "temp", drop = TRUE])
+median(data_group[, "casual", drop = TRUE])
+median(data_group[, "registered", drop = TRUE])
 
-apply(data_group["temp"], 2, Mode)
-apply(data_group["casual"], 2, Mode)
-apply(data_group["registered"], 2, Mode)
+Mode(data_group[, "temp", drop = TRUE])
+Mode(data_group[, "casual", drop = TRUE])
+Mode(data_group[, "registered", drop = TRUE])
 
 #Item 3.
 quartis10 <- quantile(data_group[1:10, "temp", drop = TRUE], probs=c(0.25,0.50,0.75), type = 6)
