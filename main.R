@@ -105,3 +105,63 @@ Q1_total_user <- unname(quantile(total_user, probs=c(0.25,0.50,0.75), type = 6))
 low_usage <- as.integer(total_user < Q1_total_user)
 quantidade <- as.numeric(sum(low_usage == 1))
 proporcao <- quantidade/300
+
+# Questão 3
+# Item 1
+# Convertendo season numérico para categórico
+data_group$season <- factor(data_group$season,
+                            levels = c(1, 2, 3, 4),
+                            labels = c("Inverno", "Primavera", "Verão", "Outono"))
+# Média de usuários por estação do ano
+tapply(total_user, data_group$season, mean)
+# Mediana de usuários por estação
+tapply(total_user, data_group$season, median)
+# Desvio padrão de total_user por estação
+tapply(total_user, data_group$season, sd)
+# Proporção de dias classificados como low_usage por estação
+tapply(low_usage, data_group$season, mean)
+
+boxplot(total_user ~ data_group$season,
+        main = "Comparação do uso do sistema por Estação", #Titulo
+        xlab = "Estação do Ano", #legenda eixo x
+        ylab = "Total de Usuários", #legenda eixo y
+        medcol = "#D32F2F",        # Cor da mediana
+        col = c("#81C784", "#FFF176", "#FFB74D", "#64B5F6"), #cores das caixas
+        border = "#2E7D32") #cor da borda da caixa
+
+# Item 2
+# Convertendo weathersit de numérico para categórico
+data_group$weathersit <- factor(data_group$weathersit, 
+                                levels = c(1, 2, 3, 4), 
+                                labels = c("Céu limpo", "Nublado", "Chuva fraca", "Chuva forte"))
+
+# Média total_user por condição meteorológica
+tapply(total_user, data_group$weathersit, mean)
+
+# Desvio padrão de total_user por condição meteorológica
+tapply(total_user, data_group$weathersit, sd)
+
+# Proporção de dias de baixa utilização (low_usage) por condição meteorológica
+tapply(low_usage, data_group$weathersit, mean)
+
+# Boxplot 
+boxplot(total_user ~ data_group$weathersit,
+        main = "Utilização do Sistema por Condição Meteorológica",
+        xlab = "Condições Meteorológicas",
+        ylab = "Total de Usuários",
+        col = c("#FFF176", "#D3D3D3", "#00A8FF", "#173A59"),
+        border = "#2E7D32")
+        
+#item 3
+# Cálculo do coeficiente de correlação de Pearson
+correlacao <- cor(data_group$temp, total_user)
+print(correlacao)
+
+# Construção do gráfico de dispersão 
+plot(data_group$temp, total_user,
+     main = "Relação entre temperatura e utilização do sistema",
+     xlab = "Temperatura em graus Celsius",
+     ylab = "Total de Usuários",
+     pch = 19,               # Formato do ponto (bolinha preenchida)
+     col = "#2E7D32",        # Cor dos pontos 
+     frame.plot = FALSE)     # Remove a moldura externa superior e direita
