@@ -165,3 +165,65 @@ plot(data_group$temp, total_user,
      pch = 19,               # Formato do ponto (bolinha preenchida)
      col = "#2E7D32",        # Cor dos pontos 
      frame.plot = FALSE)     # Remove a moldura externa superior e direita
+
+# Questão 4
+#item 1: criação de variável sdata como série temporal com base de total_user
+
+sdata <- ts(total_user, start = c(2011, 1), frequency = 365.65)
+
+#uso do plot para representação gráfica,
+#main: titulo
+#ylab: texto do eixo y
+#xlab: texto do eixo x
+plot(sdata, 
+     main = "série temporal",
+     ylab = "total de usuários", 
+     xlab = "tempo")
+
+#para melhor compreensão do gráfico
+#acrescentando pontos de mínimo (vermelho) e máximo (azul) no gráfico com os respectivos número de usuários e dia do registro
+
+points(time(sdata)[which.min(sdata)], 
+       min(sdata), 
+       col = ("red"), 
+       pch = 19)  #cor e espessura do ponto mínimo
+text(time(sdata)[which.min(sdata)], 
+     min(sdata), 
+     labels = paste0("mín: ", min(sdata), " - ", data_group$dteday[which.min(sdata)]), 
+     col = ("red"), 
+     pos = 4,)  #cor e posicionamento do texto do ponto mínimo
+
+points(time(sdata)[which.max(sdata)],
+       max(sdata), 
+       col = ("blue"), 
+       pch = 19)  #cor e espessura do ponto máximo
+
+text(time(sdata)[which.max(sdata)], 
+     max(sdata), 
+     labels = paste0("máx: ", max(sdata), " - ", data_group$dteday[which.max(sdata)]), 
+     col = ("blue"),
+     pos = 4) #cor e posicionamento do texto do ponto máximo
+
+#item 2: 
+
+#declarando variável de registro de temperatura e condição, classificando o tipo de condição meteorológica
+d_temp <- c(data_group$temp) #dados temperatura
+
+d_met <- c(data_group$weathersit) #dados condição meteorologica
+nivel_met <- factor(d_met, levels = c(1, 2, 3), labels = c("ceu limpo", "nublado", "chuva fraca")) 
+
+#criação de gráfico (pizza) para relação com condição e usuários
+pie(table(nivel_met), 
+    col = c("#B8B8B8","#808080","#404040"), 
+    main = "Gráfico de Pizza - Níveis",)
+
+#item 3:
+#criação do gráfico (dispersão), com condições para identificar dias de baixo uso
+cores <- ifelse(low_usage == 1, "red", "#2E7D32")
+plot(data_group$temp, total_user,
+     main = "Relação entre temperatura e utilização do sistema (com dias de baixo uso)",
+     xlab = "Temperatura em graus Celsius",
+     ylab = "Total de Usuários",
+     pch = 19,               # Formato do ponto (bolinha preenchida)
+     col = cores,        # Cor dos pontos 
+     frame.plot = FALSE)     # Remove a moldura externa superior e direita
