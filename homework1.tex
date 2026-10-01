@@ -803,9 +803,162 @@ Observou-se que esta categoria é um fator altamente impactante na demanda do si
 Os resultados mostram que a temperatura possui considerável relação com a utilização do sistema. Através do coeficiente de correlação de Pearson obtido ($r \approx 0.64$), evidencia-se uma forte associação linear positiva, com o gráfico de dispersão ilustrando claramente o aumento gradual no número de usuários conforme a temperatura aumenta, até um limite de conforto e saúde por volta de 30-32°C. Além disso, o gráfico de dispersão, apesar de estar analisando a relação temperatura x total de usuários, também reforça a associação encontrada no item 1 entre estação do ano e \texttt{total\_user}, constatando-se que estações do ano mais frias apresentam médias de usuários menores do que estações mais quentes, com a média de usuários do inverno (2000) sendo menos da metade da média de usuários do verão (4464).
 
 % ==========================================
-% 3. Questão 4
+% 4. Questão 4
 % ==========================================
 \section*{Questão 4}
 \addcontentsline{toc}{section}{Questão 4}
 
+A questão 4 pede uma análise mais profunda sobre o fenômeno de baixa utilização do compartilhamento de bicicletas e sua relação com a temperatura e estações do ano, como investigado nas questões anteriores.
+
+% ==========================================
+% 4.1 Item 1
+% ==========================================
+\subsection*{Item 1}
+\addcontentsline{toc}{subsection}{Item 1}
+O item pede para que seja feita uma série temporal no R do número total de usuários no decorrer do período registrado no dataframe. 
+
+Utilizando o número total de usuários evidenciado pela variável \texttt{total\_user}, é criada uma variável do tipo série temporal (ts) de nome sdata para representar os dias em que foram registrados os usuários. Ela é definida por um começo da contagem de tempo pelo dia inicial 2011/01/01 (ano/mês/dia), conforme mostrado no dataframe e um fim não definido, onde faria a contagem terminar no ultimo dado, em 2012/12/31, também é estabelecido uma frequência de 365,65 que correspondem os dias por ano (incluindo bissexto).
+
+O código abaixo mostra o comando utilizado:
+
+% ----------- Código 14 -------------
+\begin{rcode}[firstnumber=169, caption={Definição de variável},breaklines=true, breakatwhitespace=true]
+    # Questão 4
+    #item 1: criação de variável sdata como série temporal com base de total_user
+
+    sdata <- ts(total_user, start = c(2011, 1), frequency = 365.65)
+\end{rcode}
+
+Com a série temporal definida, será necessário mostrar a representação gráfica (plot) do número de usuários e mostrar o ponto mínimo e máximo de registro de usuários. Cria-se um plot com sdata com a nomeação de título, coluna e linha, mostrando o total de usuários em relação com o período de tempo (nos 2 anos de registro do dataframe), respectivamente.
+
+% ----------- Código 15 -------------
+\begin{rcode}[firstnumber=174, caption={Plot da série temporal},breaklines=true, breakatwhitespace=true]
+    #uso do plot para representação gráfica,
+    #main: titulo
+    #ylab: texto do eixo y
+    #xlab: texto do eixo x
+    plot(sdata, 
+         main = "série temporal",
+         ylab = "total de usuários", 
+         xlab = "tempo")
+\end{rcode}
+
+Para encontrar os pontos mínimo e máximo dentro do plot, defina-se dois pontos de busca no total\_user, um com o menor número de registros de compartilhamento e outro com o maior, seguido da data correspondente. Além disso, para melhor compreensão, esses pontos serão marcados para facilitar a localização na representação gráfica, na qual a coluna com o ponto de cor vermelha sinaliza o período onde teve o menor registro de compartilhamento, e a coluna com o ponto de cor azul o período onde teve mais registros. 
+
+% ----------- Código 16 -------------
+\begin{rcode}[firstnumber=174, caption={Plot da série temporal},breaklines=true, breakatwhitespace=true]
+    #para melhor compreensão do gráfico
+    #acrescentando pontos de mínimo (vermelho) e máximo (azul) no gráfico com os respectivos número de usuários e dia do registro
+
+    points(time(sdata)[which.min(sdata)], 
+        min(sdata), 
+        col = ("red"), 
+        pch = 19)  #cor e espessura do ponto mínimo
+    text(time(sdata)[which.min(sdata)], 
+        min(sdata), 
+        labels = paste0("mín: ", min(sdata), " - ", data_group$dteday[which.min(sdata)]), 
+        col = ("red"), 
+        pos = 4,)  #cor e posicionamento do texto do ponto mínimo
+
+    points(time(sdata)[which.max(sdata)],
+        max(sdata), 
+        col = ("blue"), 
+        pch = 19)  #cor e espessura do ponto máximo
+
+    text(time(sdata)[which.max(sdata)], 
+        max(sdata), 
+        labels = paste0("máx: ", max(sdata), " - ", data_group$dteday[which.max(sdata)]), 
+        col = ("blue"),
+        pos = 4) #cor e posicionamento do texto do ponto máximo
+\end{rcode}
+
+A representação gráfica obtém o seguinte resultado utilizando as 300 observações:
+
+% ------------ Imagem 6 -----------
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{SerieTemporal.png}
+    \caption{Série temporal)}
+    \label{fig:serie_temporal}
+\end{figure}
+
+% ==========================================
+% 4.2 Item 2
+% ==========================================
+
+\subsection*{Item 2}
+\addcontentsline{toc}{subsection}{Item 2}
+Este item busca retomar as duas características selecionadas na questão 3 e identificar uma visualização e medida estatística adequada.
+
+Para temperatura, a visualização pelo gráfico de dispersão (\ref{fig:dispersao_temp}), que já foi feito, provavelmente é melhor escolha, pois relaciona duas variáveis e permite verificar a causalidade e a correlação de forma fácil. Além disso, como a tendência linear é perceptivel, o coeficiente de pearson é adequado para identificar a relação.
+
+Para condições meteorológicas, o box-plot também é a melhor escolha para visualização. Mas também foi feito um gráfico de pizza para associar a quantidade total de usuários e as condições meteorológicas. O código utilizado foi o seguinte:
+
+% ----------- Código 16 -------------
+\begin{rcode}[firstnumber=207, caption={Gráfico de pizza},breaklines=true, breakatwhitespace=true]
+    #item 2: 
+
+    #declarando variável de registro de temperatura e condição, classificando o tipo de condição meteorológica
+    d_temp <- c(data_group$temp) #dados temperatura
+
+    d_met <- c(data_group$weathersit) #dados condição meteorologica
+    nivel_met <- factor(d_met, levels = c(1, 2, 3), labels = c("ceu limpo", "nublado", "chuva fraca")) 
+
+    #criação de gráfico (pizza) para relação com condição e usuários
+    pie(table(nivel_met), 
+        col = c("#B8B8B8","#808080","#404040"), 
+        main = "Gráfico de Pizza - Níveis",)
+\end{rcode}
+
+Segue imagem resultante:
+
+% ------------ Imagem 7 -----------
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{pizza.png}
+    \caption{Gráfico de pizza}
+    \label{fig:pizza}
+\end{figure}
+
+% ==========================================
+% 4.3 Item 3
+% ==========================================
+\subsection*{Item 3}
+\addcontentsline{toc}{subsection}{Item 3}
+Este item solicitava para fazer uma análise relacional entre temperatura e \texttt{total\_user}, diferenciando visualmente os dias classificados como \texttt{low\_usage}.
+
+A partir das 300 observações e como observado na questão 3, os usuários totais apresentam uma correlação positiva com a temperatura. Para identificar visualmente todos os dias classificados como \texttt{low\_usage}, é feita uma modificação no gráfico de dispersão (\ref{fig:dispersao_temp}), determinando uma condição nas cores, que se for um dia de baixa utilização será vermelho e caso contrário verde escuro. 
+
+% ----------- Código 17 -------------
+\begin{rcode}[firstnumber=220, caption={Dispersão e Low Usage},breaklines=true, breakatwhitespace=true]
+    #item 3:
+    #criação do gráfico (dispersão), com condições para identificar dias de baixo uso
+    cores <- ifelse(low_usage == 1, "red", "#2E7D32")
+    plot(data_group$temp, total_user,
+        main = "Relação entre temperatura e utilização do sistema (com dias de baixo uso)",
+        xlab = "Temperatura em graus Celsius",
+        ylab = "Total de Usuários",
+        pch = 19,               # Formato do ponto (bolinha preenchida)
+        col = cores,        # Cor dos pontos 
+        frame.plot = FALSE)     # Remove a moldura externa superior e direita
+\end{rcode}
+
+A imagem resultante foi:
+
+% ------------ Imagem 8 -----------
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{dispersaoLow_Usage.png}
+    \caption{Gráfico com low usage evidenciado}
+    \label{fig:disp_low}
+\end{figure}
+
+% ==========================================
+% 4.4 Item 4
+% ==========================================
+\subsection*{Item 4}
+\addcontentsline{toc}{subsection}{Item 4}
+A análise comparativa entre a quantidade diária do \texttt{total\_user} e as características permite concluir que há uma correlação direta entre elas. Por exemplo, no box plot (\ref{fig:boxplot_clima}) é conclusivo que em dias de céu limpo ou nublado há mais usuários, comparando com dias de chuva fraca. Também é possível afirmar que quanto maior a temperatura maior o número de usuários, apresentando uma correlação positiva, conforme o gráfico (\ref{fig:dispersao_temp}). A influência da estação para os usuários é a menor entre as características, por que a única que possui diferença significativa em comparação com as outras é o inverno, no entanto, essa estação é a que apresenta temperaturas menores, logo é inferível que a correlação positiva decorre da temperatura e não das outras características associadas da estação.
+
 \end{document}
+
